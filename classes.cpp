@@ -9,88 +9,77 @@ using namespace std;
   Date: 
  */
 
+char* getret(char* message, int len = 50)
+{
+  char* arr;
+  cout << message;
+  cin.getline(arr, 50);
+  return arr;
+}
+int getint(char* message)
+{
+  int value;
+  cout << message;
+  cin >> value;
+  return value;
+}
+float getfloat(char* message)
+{
+  float value;
+  cout << message;
+  cin >> value;
+  return value;
+}
 
 void addMedia(vector<Media*> media)
 {
-  char typearray[50];
-  cout << "What type of media would you like to add: \n";
-  cin >> typearray;
-  char type = typearray[0];
+  char type = getret("What type of media would you like to add: \n", 10)[0];
   type = (char)tolower(type);
   if (type == 'v')
     {
-      char name[50];
-      cout << "What is the name of the videogame?: \n";
-      cin.getline(name, 50);
-      char publisher[50];
-      cout << "What is the publisher of the videogame?: \n";
-      cin.getline(publisher, 50);
-      char rating[50];
-      cout << "What is the rating of the videogame?: \n";
-      cin.getline(rating, 50);
-      int year;
-      cout << "What is the year the videogame was published?: \n";
-      cin >> year;
+      char* name = getret("What is the name of the videogame?: \n");
+      char* publisher = getret("What is the publisher of the videogame?: \n");
+      char* rating = getret("What is the rating of the videogame?: \n");
+      int year = getint("What is the year the videogame was published?: \n");
       media.push_back(new VideoGame(name, year, publisher, rating));
     }
   else if (type == 'm')
     {
       if (typearray[1] == 'u')//music
 	{
-	  char name[50];
-	  cout << "What is the name of the song?: \n";
-	  cin.getline(name, 50);
-	  char artist[50];
-	  cout << "Who is the artist: \n";
-	  cin.getline(artist, 50);
-	  char publisher[50];
-	  cout << "Who is the publisher?: \n";
-	  cin.getline(publisher, 50);
-	  int year;
-	  cout << "What is the year the videogame was published?: \n";
-	  cin >> year;
-	  float duration;
-	  cout << "What is the duration of the song?";
-	  cin >> duration;
-	  media.push_back(new Music(name, year, publisher, rating));
+	  char* name = getret("What is the name of the song?: \n");
+	  char* artist = getret("Who is the artist?: \n");
+	  char* publisher = getret("Who is the publisher?: \n");
+	  int year = getint("What is the year the videogame was published?: \n");
+	  float duration = getfloat("What is the duration of the song?: \n");
+	  media.push_back(new Music(name, year, publisher, artist, duration));
 	}
       else if (typearray == 'o')//movies
 	{
-	  char name[50];
-	  cout << "What is the name of the movie?: \n";
-	  cin.getline(name, 50);
-	  char director[50];
-	  cout << "Who is the director of the movie?: \n";
-	  cin.getline(publisher, 50);
-	  char rating[50];
-	  cout << "What is the rating of the movie?: \n";
-	  cin.getline(rating, 50);
-	  int year;
-	  cout << "What is the year the movie was published?: \n";
-	  cin >> year;
-	  float duration;
-	  cout << "What is the duration of the movie?";
-	  cin >> duration;
+	  char name = getret("What is the name of this movie?: \n");
+	  char director = getret("Who is the diretor of this movie?: \n");
+	  char* rating = getret("What is this movie rated?");
+	  int year = getint("What is the year the movie was published?: \n");
+	  float duration = getfloat("What is the duration of the movie? \n");
 	  media.push_back(new Movie(name, year, publisher, rating, duration); 
 	}
     }
 }
-void deleteMedia(vector<Media*> media)
+void deleteMedia(vector<Media*> media, vector<Media*> todelete)
 {
-  
+  for (Media* todel : todelete)
+    {
+      erase(media, todel);
+    }
 }
-void searchMedia(vector<Media*> media)//The user should be able to search for and print objects currently in the media database by searching for the title or the year.  If multiple objects match, list them all.
+ void searchMedia(vector<Media*> medialib, vector<Media*> media = medialib, bool del = false)//The user should be able to search for and print objects currently in the media database by searching for the title or the year.  If multiple objects match, list them all.
 {
-  char input;
-  cout << "How would you like to search?(year/title): \n";
-  cin >> input;
+  char input = getret("How would you like to search?(year/title): \n");
   input = (char)tolower(input);
   vector<Media*> searchedItems;
   if (input == 'y')
     {
-      int year;
-      cout << "What year would you like to search for?: \n";
-      cin >> year;
+      int year = getint("What year would you like to search for?: \n");
       for (Media* m : media) {
 	if (year == m->getYear())
 	  {
@@ -100,9 +89,7 @@ void searchMedia(vector<Media*> media)//The user should be able to search for an
     }
   else if (input == 't')
     {
-      char title[20];
-      cout << "What title would you like to search for?: \n";
-      cin.getline(title, 20);
+      char* title = getret("What title would you like to search for?: \n");
       for (Media* m : media) {//change this to search to see if it matches the string as long as it goes
 	if (title == m->getName())
 	  {
@@ -115,12 +102,18 @@ void searchMedia(vector<Media*> media)//The user should be able to search for an
     {
       m->print();
     }
-  cout << "\nWould you like to continue searching this list? \n";
-  char answer[10];
-  cin.getline(answer, 10);
-  if (answer[] == 'y')
+  char answer = getret("\nWould you like to continue searching this list? \n")[0];
+  if (answer == 'y')
     {
-      searchMedia(searchedItems);
+      searchMedia(medialib, searchedItems);
+    }
+  if (del)
+    {
+      char delanswer = getret("Would you like to remove these media? \n")[0];
+      if (delanswer == 'y')
+	{
+	  deleteMedia(medialib, searchedItems);
+	}
     }
 }
 
