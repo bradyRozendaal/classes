@@ -1,20 +1,35 @@
 #include <iostream>
 #include <cstring>
-#include <vector>
+#include "videogame.h"
 using namespace std;
 
-class VideoGame : public Media {
-private:
-    string publisher;
-    string rating;
-public:
-    VideoGame(string t, int y, string pub, string r)
-        : Media(t, y), publisher(pub), rating(r) {}
+VideoGame::VideoGame(char* t, int y, char* pub, char* r) : Media(t, y)
+{
+  publisher = new char[strlen(pub) + 1];
+  strcpy(publisher, pub);
 
-    void print() const override {
-        Media::print(); // call base version, then add more
-        cout << " - " << publisher << ", Rated: " << rating << endl;
-    }
+  rating = new char[strlen(r) + 1];
+  strcpy(rating, r);
+}
 
-    string getRating() const { return rating; } // unique to VideoGame
-};
+VideoGame::~VideoGame()
+{
+  delete[] publisher;
+  delete[] rating;
+}
+
+void VideoGame::print() const
+{
+  Media::print();
+  cout << " - " << publisher << ", Rated: " << rating << endl;
+}
+
+char* VideoGame::getPublisher() const
+{
+  return publisher;
+}
+
+char* VideoGame::getRating() const
+{
+  return rating;
+}

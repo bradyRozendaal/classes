@@ -1,19 +1,32 @@
 #include <iostream>
 #include <cstring>
-#include <vector>
+#include "Media.h"
 using namespace std;
 
-class Media {
-protected:
-  string title;
-  int year;
-public:
-  Media(string t, int y) : title(t), year(y) {}
-  virtual ~Media() {} 
+Media::Media(char* t, int y)
+{
+    title = new char[strlen(t) + 1];
+    strcpy(title, t);
 
-  virtual void print() const {
+    year = y;
+}
+
+Media::~Media()
+{
+    delete[] title;
+}
+
+void Media::print() const
+{
     cout << title << " (" << year << ")";
-  }
-  string getTitle() const { return title; }
-  int getYear() const { return year; }
-};
+}
+
+char* Media::getTitle() const
+{
+    return title;
+}
+
+int Media::getYear() const
+{
+    return year;
+}

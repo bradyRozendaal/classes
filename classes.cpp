@@ -1,156 +1,279 @@
 #include <iostream>
 #include <cstring>
+#include <cctype>
 #include <vector>
+
+#include "Media.h"
+#include "VideoGame.h"
+#include "Music.h"
+#include "Movie.h"
+
 using namespace std;
 
 /*
   Project: Classes
   Made by: Brady Rozendaal
   Date: 
- */
+*/
 
-char* getret(char* message, int len = 50)
+// Gets a C-string from the user.
+// The array is created by the function that calls getString().
+void getString(char* message, char* arr, int len)
 {
-  char* arr;
   cout << message;
-  cin.getline(arr, 50);
-  return arr;
+  cin.getline(arr, len);
 }
-int getint(char* message)
+
+
+// Gets an integer from the user.
+int getInt(char* message)
 {
   int value;
+
   cout << message;
   cin >> value;
-  return value;
-}
-float getfloat(char* message)
-{
-  float value;
-  cout << message;
-  cin >> value;
+  cin.ignore(1000, '\n');
+
   return value;
 }
 
-void addMedia(vector<Media*> media)
+
+// Gets a floating-point number from the user.
+float getFloat(char* message)
 {
-  char type = getret("What type of media would you like to add: \n", 10)[0];
-  type = (char)tolower(type);
-  if (type == 'v')
+  float value;
+
+  cout << message;
+  cin >> value;
+  cin.ignore(1000, '\n');
+
+  return value;
+}
+
+// Adds a new piece of media to the library.
+void addMedia(vector<Media*>& media)
+{
+  char type[20];
+
+  cout << "What type of media would you like to add?\n";
+  cout << "Video Game, Music, or Movie: ";
+
+  cin.getline(type, 20);
+
+  // Look at the first letter so the user can enter
+  // something like "video game", "music", or "movie".
+  char firstLetter = tolower(type[0]);
+
+  if (firstLetter == 'v')
     {
-      char* name = getret("What is the name of the videogame?: \n");
-      char* publisher = getret("What is the publisher of the videogame?: \n");
-      char* rating = getret("What is the rating of the videogame?: \n");
-      int year = getint("What is the year the videogame was published?: \n");
+      char name[100];
+      char publisher[100];
+      char rating[20];
+
+      getString((char*)"What is the name of the video game?: ", name, 100);
+
+      int year = getInt((char*)"What year was the video game published?: ");
+
+      getString((char*)"What is the publisher of the video game?: ", publisher, 100);
+
+      getString((char*)"What is the rating of the video game?: ", rating, 20);
+
       media.push_back(new VideoGame(name, year, publisher, rating));
     }
-  else if (type == 'm')
+
+  else if (firstLetter == 'm')
     {
-      if (typearray[1] == 'u')//music
-	{
-	  char* name = getret("What is the name of the song?: \n");
-	  char* artist = getret("Who is the artist?: \n");
-	  char* publisher = getret("Who is the publisher?: \n");
-	  int year = getint("What is the year the videogame was published?: \n");
-	  float duration = getfloat("What is the duration of the song?: \n");
-	  media.push_back(new Music(name, year, publisher, artist, duration));
-	}
-      else if (typearray == 'o')//movies
-	{
-	  char name = getret("What is the name of this movie?: \n");
-	  char director = getret("Who is the diretor of this movie?: \n");
-	  char* rating = getret("What is this movie rated?");
-	  int year = getint("What is the year the movie was published?: \n");
-	  float duration = getfloat("What is the duration of the movie? \n");
-	  media.push_back(new Movie(name, year, publisher, rating, duration); 
-	}
+      if (tolower(type[1]) == 'u')
+        {
+	  char name[100];
+	  char artist[100];
+	  char publisher[100];
+
+	  getString((char*)"What is the name of the song?: ", name, 100);
+
+	  getString((char*)"Who is the artist?: ", artist, 100);
+
+	  int year = getInt((char*)"What year was the song published?: ");
+
+	  getString((char*)"Who is the publisher?: ", publisher, 100);
+
+	  float duration = getFloat((char*)"What is the duration of the song?: ");
+
+	  media.push_back(new Music(name, artist, year, duration, publisher)
+			  );
+        }
+
+      else if (tolower(type[1]) == 'o')
+        {
+	  char name[100];
+	  char director[100];
+	  char rating[20];
+
+	  getString((char*)"What is the name of the movie?: ", name, 100);
+
+	  getString((char*)"Who is the director of the movie?: ",director, 100);
+
+	  int year = getInt((char*)"What year was the movie released?: ");
+
+	  float duration = getFloat((char*)"What is the duration of the movie?: ");
+
+	  getString((char*)"What is the movie rated?: ", rating, 20);
+
+	  media.push_back(new Movie(name, director, year, duration, rating));
+        }
+    }
+
+  else
+    {
+      cout << "That is not a valid media type.\n";
     }
 }
-void deleteMedia(vector<Media*> media, vector<Media*> todelete)
+
+vector<Media*> searchMedia(vector<Media*>& media)
 {
-  for (Media* todel : todelete)
-    {
-      erase(media, todel);
-    }
-}
- void searchMedia(vector<Media*> medialib, vector<Media*> media = medialib, bool del = false)//The user should be able to search for and print objects currently in the media database by searching for the title or the year.  If multiple objects match, list them all.
-{
-  char input = getret("How would you like to search?(year/title): \n");
-  input = (char)tolower(input);
+  char input[20];
   vector<Media*> searchedItems;
-  if (input == 'y')
+
+  cout << "How would you like to search? (year/title): ";
+  cin.getline(input, 20);
+
+  if (tolower(input[0]) == 'y')
     {
-      int year = getint("What year would you like to search for?: \n");
-      for (Media* m : media) {
-	if (year == m->getYear())
-	  {
-	    searchedItems.push_back(m);
-	  }
-      }
+      int year = getInt((char*)"What year would you like to search for?: ");
+
+      for (Media* m : media)
+        {
+	  if (m->getYear() == year)
+            {
+	      searchedItems.push_back(m);
+            }
+        }
     }
-  else if (input == 't')
+
+  else if (tolower(input[0]) == 't')
     {
-      char* title = getret("What title would you like to search for?: \n");
-      for (Media* m : media) {//change this to search to see if it matches the string as long as it goes
-	if (title == m->getName())
-	  {
-	    searchedItems.push_back(m);
-	  }
-      }
+      char title[100];
+
+      getString((char*)"What title would you like to search for?: ",
+		title, 100);
+
+      for (Media* m : media)
+        {
+	  if (strcmp(title, m->getTitle()) == 0)
+            {
+	      searchedItems.push_back(m);
+            }
+        }
     }
-  cout << "Here are the media you searched for: \n";
+
+  else
+    {
+      cout << "Invalid search option.\n";
+      return searchedItems;
+    }
+
+  cout << "\nHere are the media you searched for:\n";
+
   for (Media* m : searchedItems)
     {
       m->print();
     }
-  char answer = getret("\nWould you like to continue searching this list? \n")[0];
-  if (answer == 'y')
+
+  if (searchedItems.size() == 0)
     {
-      searchMedia(medialib, searchedItems);
+      cout << "No matching media found.\n";
+      return searchedItems;
     }
-  if (del)
+
+  char answer[10];
+
+  getString(
+	    (char*)"\nWould you like to search within these results? (y/n): ",
+	    answer,
+	    10
+	    );
+
+  if (tolower(answer[0]) == 'y')
     {
-      char delanswer = getret("Would you like to remove these media? \n")[0];
-      if (delanswer == 'y')
-	{
-	  deleteMedia(medialib, searchedItems);
-	}
+      return searchMedia(searchedItems);
+    }
+
+  return searchedItems;
+}
+void deleteMedia(vector<Media*>& library)
+{
+  vector<Media*> toDelete = searchMedia(library);
+
+  if (toDelete.size() == 0)
+    {
+      return;
+    }
+
+  char answer[10];
+
+  getString((char*)"\nWould you like to delete these media? (y/n): ", answer, 10);
+
+  if (tolower(answer[0]) == 'y')
+    {
+      for (Media* m : toDelete)
+        {
+	  for (int i = 0; i < library.size(); i++)
+            {
+	      if (library[i] == m)
+                {
+		  delete library[i];
+		  library.erase(library.begin() + i);
+		  i = library.size();
+                }
+            }
+        }
+
+      cout << "Media deleted.\n";
     }
 }
 
 int main()
 {
   vector<Media*> library;
+
   bool run = true;
+
   while (run)
     {
-      char inputarray[];
-      cout << "What would you like to do? (quit, search, delete, add)\n";
-      cin >> input;
-      char input = inputarray[0];
-      if (input == 'a')//add
-	{
+      char input[20];
+
+      cout << "\nWhat would you like to do?\n";
+      cout << "Add, Search, Delete, or Quit: ";
+
+      cin.getline(input, 20);
+
+      char command = tolower(input[0]);
+
+      if (command == 'a')
+        {
 	  addMedia(library);
-	}
-      else if (input == 's')//search
+        }
+
+      else if (command == 's')
         {
 	  searchMedia(library);
-	}
-      else if (input == 'd')//delete
-	{
-	  deleteMedia(library);
-	}
-      else if (input == 'q')//quit
-	{
-	  run = false;
-	}
-    }
-  
-  
-  for (Media* m : library) {
-    // getRating() doesn't exist on Media, only VideoGame —> need to check + cast
-    if (VideoGame* vg = dynamic_cast<VideoGame*>(m)) {
-      cout << vg->getRating();
-    }
-  }
+        }
 
+      else if (command == 'd')
+        {
+	  deleteMedia(library);
+        }
+
+      else if (command == 'q')
+        {
+	  run = false;
+        }
+
+      else
+        {
+	  cout << "Invalid command.\n";
+        }
+    }
+  deleteAllMedia(library);
+  return 0;
 }
