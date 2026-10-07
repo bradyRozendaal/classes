@@ -3,10 +3,10 @@
 #include <cctype>
 #include <vector>
 
-#include "Media.h"
-#include "VideoGame.h"
-#include "Music.h"
-#include "Movie.h"
+#include "mediaparent.h"
+#include "videogame.h"
+#include "music.h"
+#include "movie.h"
 
 using namespace std;
 
@@ -154,8 +154,7 @@ vector<Media*> searchMedia(vector<Media*>& media)
     {
       char title[100];
 
-      getString((char*)"What title would you like to search for?: ",
-		title, 100);
+      getString((char*)"What title would you like to search for?: ", title, 100);
 
       for (Media* m : media)
         {
@@ -187,11 +186,7 @@ vector<Media*> searchMedia(vector<Media*>& media)
 
   char answer[10];
 
-  getString(
-	    (char*)"\nWould you like to search within these results? (y/n): ",
-	    answer,
-	    10
-	    );
+  getString((char*)"\nWould you like to search within these results? (y/n): ", answer, 10);
 
   if (tolower(answer[0]) == 'y')
     {

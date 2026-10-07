@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include "media.h"
+#include "mediaparent.h"
 using namespace std;
 
 class VideoGame : public Media {

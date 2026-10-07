@@ -2,19 +2,18 @@
 #include <cstring>
 #include "mediaparent.h"
 
-using namespace std;
+using namespace std
 
-class Music : public Media {
+Class Movie : public Media{
  private:
-  char* artist;
   char* publisher;
+  char* rating;
   float duration;
  public:
-  Music(char* t, int y, char* artist, char* pub, float dur);
+  Movie(char* t, int y, char* pub, char* rating, float duration);
   ~Music();
-
   void print() const override;
   char* getPublisher() const;
-  char* getArtist() const;
+  char* getRating() const;
   float getDuration() const;
 }

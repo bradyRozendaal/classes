@@ -25,15 +25,15 @@ void Music::print() const
   cout << " - " << artist << ", Publisher: " << publisher << ", duration: " << duration << "\n";
 }
 
-char* Music::getPublisher const
+char* Music::getPublisher() const
 {
   return publisher;
 }
-char* Music::getArtist const
+char* Music::getArtist() const
 {
   return artist;
 }
-float Music::getDuration const
+float Music::getDuration() const
 {
   return duration;
 }
